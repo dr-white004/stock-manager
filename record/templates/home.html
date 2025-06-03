@@ -1,0 +1,240 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Product Inventory Manager{% endblock %}
+
+{% block content %}
+<div class="space-y-16 py-12">
+    <!-- Hero Section -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="bg-gradient-to-r from-primary-50 to-blue-50 rounded-2xl p-8 md:p-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                Smart Inventory Management <br>
+                <span class="text-primary-600">For Product Resellers</span>
+            </h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+                Track stock, sales, and returns effortlessly. Perfect for businesses dealing with product inventory.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                {% if user.is_authenticated %}
+                <a href="{% url 'summary' %}" class="inline-flex items-center justify-center px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg shadow-sm transition-colors">
+                    Go to Dashboard
+                </a>
+                {% else %}
+                <a href="{% url 'register' %}" class="inline-flex items-center justify-center px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg shadow-sm transition-colors">
+                    Get Started - Free
+                </a>
+                <a href="#features" class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg shadow-sm hover:bg-gray-50 transition-colors">
+                    Learn More
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        <div class="text-center">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">How It Works</h2>
+            <p class="text-gray-600 max-w-3xl mx-auto">Streamline your Product inventory management with these key features</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Feature 1 -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">product Types</h3>
+                <p class="text-gray-600">Categorize your inventory with different Product models. Add descriptions and images for easy identification.</p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+                <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Stock Management</h3>
+                <p class="text-gray-600">Record new stock arrivals, track defective items, and automatically calculate good quantities.</p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+                <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Sales Tracking</h3>
+                <p class="text-gray-600">Record every sale with timestamps and notes. Automatic inventory deduction keeps your stock accurate.</p>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Returns Processing</h3>
+                <p class="text-gray-600">Handle defective returns efficiently. The system automatically adjusts your inventory counts.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Helps Section -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-white rounded-2xl shadow-sm border border-gray-200 p-8 md:p-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+                <h2 class="text-3xl font-bold text-gray-900 mb-6">Perfect for Product Resellers</h2>
+                <ul class="space-y-4 text-gray-600">
+                    <li class="flex items-start">
+                        <svg class="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>Specifically designed for businesses that get Product from larger stores for retail selling</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>Track defective items separately for easy returns to suppliers</span>
+                    </li>
+                    <li class="flex items-start">
+                        <svg class="h-5 w-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        <span>Know exactly what's in stock, sold, or returned at any time</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-6 border border-gray-200">
+                <div class="aspect-w-16 aspect-h-9">
+                    <div class="bg-gradient-to-br from-primary-100 to-blue-100 rounded-lg h-full flex items-center justify-center text-primary-600">
+                        <svg class="w-16 h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Preview -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">Your Inventory at a Glance</h2>
+            <p class="text-gray-600 max-w-3xl mx-auto">The summary dashboard gives you all the key metrics in one place</p>
+        </div>
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div class="bg-gray-50 p-4 border-b border-gray-200">
+                <div class="flex space-x-2">
+                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                </div>
+            </div>
+            <div class="p-6 md:p-8">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <!-- Sample Stat 1 -->
+                    <div class="bg-blue-50 rounded-lg p-6">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-500">Product Types</p>
+                                <p class="text-2xl font-bold text-gray-900">12</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Sample Stat 2 -->
+                    <div class="bg-green-50 rounded-lg p-6">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-500">Good Stock</p>
+                                <p class="text-2xl font-bold text-gray-900">143</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Sample Stat 3 -->
+                    <div class="bg-red-50 rounded-lg p-6">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-500">Defective Items</p>
+                                <p class="text-2xl font-bold text-gray-900">7</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Sample Stat 4 -->
+                    <div class="bg-purple-50 rounded-lg p-6">
+                        <div class="flex items-center">
+                            <div class="flex-shrink-0">
+                                <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <p class="text-sm font-medium text-gray-500">This Month Sales</p>
+                                <p class="text-2xl font-bold text-gray-900">24</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                    <div class="text-center py-8">
+                        <p class="text-gray-500">Your actual dashboard will show live data like this</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="bg-gradient-to-r from-primary-50 to-blue-50 rounded-2xl p-8 md:p-12">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6">Ready to Simplify Your Product Business?</h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+                Start managing your inventory the smart way today.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                {% if user.is_authenticated %}
+                <a href="{% url 'summary' %}" class="inline-flex items-center justify-center px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg shadow-sm transition-colors">
+                    Go to Dashboard
+                </a>
+                {% else %}
+                <a href="{% url 'register' %}" class="inline-flex items-center justify-center px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg shadow-sm transition-colors">
+                    Get Started - Free
+                </a>
+                <a href="{% url 'login' %}" class="inline-flex items-center justify-center px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg shadow-sm hover:bg-gray-50 transition-colors">
+                    Login
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

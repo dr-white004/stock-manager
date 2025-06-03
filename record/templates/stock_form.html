@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Stock - Clock Inventory{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center space-x-3 mb-4">
+            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-900">
+                Add New Stock
+            </h1>
+        </div>
+        <p class="text-gray-600">
+            Record new clock inventory received from suppliers
+        </p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="px-6 py-8">
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <!-- Clock Type Field -->
+                <div>
+                    <label for="{{ form.clock_type.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Clock Type <span class="text-red-500">*</span>
+                    </label>
+                    <select name="{{ form.clock_type.name }}" 
+                            id="{{ form.clock_type.id_for_label }}"
+                            class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                            required>
+                        <option value="">Select a clock type</option>
+                        {% for choice in form.clock_type.field.queryset %}
+                            <option value="{{ choice.pk }}" {% if form.clock_type.value == choice.pk|stringformat:"s" %}selected{% endif %}>
+                                {{ choice.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    {% if form.clock_type.errors %}
+                        <div class="mt-2 text-sm text-red-600">
+                            {{ form.clock_type.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Quantity Received Field -->
+                <div>
+                    <label for="{{ form.quantity_received.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Quantity Received <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <input type="number" 
+                               name="{{ form.quantity_received.name }}" 
+                               id="{{ form.quantity_received.id_for_label }}"
+                               value="{{ form.quantity_received.value|default:'' }}"
+                               min="1"
+                               class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                               placeholder="Enter quantity received"
+                               required>
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    {% if form.quantity_received.errors %}
+                        <div class="mt-2 text-sm text-red-600">
+                            {{ form.quantity_received.errors.0 }}
+                        </div>
+                    {% endif %}
+                    <p class="mt-2 text-sm text-gray-500">Total number of clocks received from supplier</p>
+                </div>
+
+                <!-- Defective Quantity Field -->
+                <div>
+                    <label for="{{ form.defective_quantity.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Defective Quantity
+                    </label>
+                    <div class="relative">
+                        <input type="number" 
+                               name="{{ form.defective_quantity.name }}" 
+                               id="{{ form.defective_quantity.id_for_label }}"
+                               value="{{ form.defective_quantity.value|default:'0' }}"
+                               min="0"
+                               class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                               placeholder="Enter defective quantity">
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    {% if form.defective_quantity.errors %}
+                        <div class="mt-2 text-sm text-red-600">
+                            {{ form.defective_quantity.errors.0 }}
+                        </div>
+                    {% endif %}
+                    <p class="mt-2 text-sm text-gray-500">Number of defective items that cannot be sold</p>
+                </div>
+
+                <!-- Stock Info Box -->
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-blue-800">Stock Calculation</h3>
+                            <div class="mt-2 text-sm text-blue-700">
+                                <p>Good quantity = Quantity Received - Defective Quantity. Defective items will be excluded from available inventory.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Errors -->
+                {% if form.non_field_errors %}
+                    <div class="rounded-md bg-red-50 p-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-red-800">Error</h3>
+                                <div class="mt-2 text-sm text-red-700">
+                                    {{ form.non_field_errors.0 }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-200">
+                    <button type="submit" 
+                            class="inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Save Stock
+                    </button>
+                    
+                    <a href="{% url 'stock_list' %}" 
+                       class="inline-flex justify-center items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-lg shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="mt-8 bg-gray-50 rounded-xl p-6">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <a href="{% url 'stock_list' %}" 
+               class="inline-flex items-center px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+                <svg class="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+                View All Stock
+            </a>
+            <a href="{% url 'clocktype_create' %}" 
+               class="inline-flex items-center px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+                <svg class="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+                Add New Clock Type
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

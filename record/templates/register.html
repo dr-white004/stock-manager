@@ -1,0 +1,290 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full space-y-8">
+    <div class="text-center">
+      <div class="w-20 h-20 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+        </svg>
+      </div>
+      <h2 class="mt-6 text-center text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+        Create an account
+      </h2>
+      <p class="mt-4 text-center text-sm text-gray-600">
+        Already have an account?
+        <a href="{% url 'login' %}" class="font-semibold text-indigo-600 hover:text-indigo-500 hover:underline transition-all duration-200">
+          Login here
+        </a>
+      </p>
+    </div>
+    
+    <form class="mt-8 space-y-6 bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-2xl border border-white/30" method="post">
+      {% csrf_token %}
+      
+      <!-- Non-field errors with better styling -->
+      {% if form.non_field_errors %}
+        <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm text-red-700 font-medium">{{ form.non_field_errors.0 }}</p>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+      
+      <div class="space-y-6">
+        {% for field in form.visible_fields %}
+          <div class="relative">
+            <label for="{{ field.id_for_label }}" class="block text-sm font-semibold text-gray-700 mb-2">
+              {{ field.label }}
+              {% if field.field.required %}
+                <span class="text-red-500 ml-1">*</span>
+              {% endif %}
+            </label>
+            
+            <div class="relative group">
+              {% if 'password' in field.name %}
+                <!-- Password fields with show/hide toggle -->
+                <input 
+                  type="password" 
+                  name="{{ field.name }}" 
+                  id="{{ field.id_for_label }}"
+                  class="block w-full px-4 py-3 pr-12 text-gray-900 placeholder-gray-500 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 bg-white hover:border-gray-300 shadow-sm hover:shadow-md"
+                  placeholder="{% if 'password1' in field.name %}Create a password{% elif 'password2' in field.name %}Confirm your password{% else %}Enter password{% endif %}"
+                  value="{{ field.value|default:'' }}"
+                  required="{{ field.field.required|yesno:'true,false' }}"
+                >
+                <button 
+                  type="button" 
+                  class="absolute inset-y-0 right-0 pr-3 flex items-center password-toggle"
+                  onclick="togglePassword('{{ field.id_for_label }}')"
+                >
+                  <svg class="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors eye-open" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                  </svg>
+                  <svg class="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors eye-closed hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"/>
+                  </svg>
+                </button>
+              {% else %}
+                <!-- Regular input fields -->
+                <input 
+                  type="{% if field.name == 'email' %}email{% else %}{{ field.field.widget.input_type|default:'text' }}{% endif %}" 
+                  name="{{ field.name }}" 
+                  id="{{ field.id_for_label }}"
+                  class="block w-full px-4 py-3 text-gray-900 placeholder-gray-500 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 bg-white hover:border-gray-300 shadow-sm hover:shadow-md"
+                  placeholder="{% if field.name == 'username' %}Choose a username{% elif field.name == 'email' %}Enter your email address{% elif field.name == 'first_name' %}Enter your first name{% elif field.name == 'last_name' %}Enter your last name{% else %}{{ field.label }}{% endif %}"
+                  value="{{ field.value|default:'' }}"
+                  required="{{ field.field.required|yesno:'true,false' }}"
+                >
+              {% endif %}
+              
+              <!-- Focus ring effect -->
+              <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-indigo-500/20 to-purple-500/20 opacity-0 transition-opacity duration-200 pointer-events-none group-focus-within:opacity-100"></div>
+            </div>
+            
+            <!-- Field errors with better styling -->
+            {% if field.errors %}
+              <div class="mt-2 flex items-start space-x-2">
+                <svg class="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                </svg>
+                <p class="text-red-600 text-sm font-medium">{{ field.errors.0 }}</p>
+              </div>
+            {% endif %}
+            
+            <!-- Success state indicator -->
+            <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none field-success hidden">
+              <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            
+            <!-- Password strength indicator -->
+            {% if 'password1' in field.name %}
+              <div class="mt-2 password-strength hidden">
+                <div class="flex items-center space-x-2 mb-2">
+                  <div class="flex-1 bg-gray-200 rounded-full h-2">
+                    <div class="strength-bar h-2 rounded-full transition-all duration-300" style="width: 0%;"></div>
+                  </div>
+                  <span class="text-xs font-medium strength-text text-gray-500">Weak</span>
+                </div>
+                <ul class="text-xs text-gray-600 space-y-1 strength-requirements">
+                  <li class="flex items-center space-x-2">
+                    <svg class="w-3 h-3 text-gray-400 req-length" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>At least 8 characters</span>
+                  </li>
+                  <li class="flex items-center space-x-2">
+                    <svg class="w-3 h-3 text-gray-400 req-number" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>Contains a number</span>
+                  </li>
+                  <li class="flex items-center space-x-2">
+                    <svg class="w-3 h-3 text-gray-400 req-letter" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>Contains uppercase & lowercase</span>
+                  </li>
+                </ul>
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+      
+      <div>
+        <button type="submit"
+          class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-indigo-200 transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+          <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+            <svg class="h-5 w-5 text-indigo-300 group-hover:text-indigo-200 transition-colors" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"/>
+            </svg>
+          </span>
+          <span class="register-text">Register</span>
+          <span class="loading-text hidden">
+            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Creating account...
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function togglePassword(fieldId) {
+  const field = document.getElementById(fieldId);
+  const button = field.nextElementSibling;
+  const eyeOpen = button.querySelector('.eye-open');
+  const eyeClosed = button.querySelector('.eye-closed');
+  
+  if (field.type === 'password') {
+    field.type = 'text';
+    eyeOpen.classList.add('hidden');
+    eyeClosed.classList.remove('hidden');
+  } else {
+    field.type = 'password';
+    eyeOpen.classList.remove('hidden');
+    eyeClosed.classList.add('hidden');
+  }
+}
+
+// Password strength checker
+function checkPasswordStrength(password) {
+  let score = 0;
+  const requirements = {
+    length: password.length >= 8,
+    number: /\d/.test(password),
+    letter: /[a-z]/.test(password) && /[A-Z]/.test(password)
+  };
+  
+  Object.values(requirements).forEach(met => {
+    if (met) score++;
+  });
+  
+  return { score, requirements };
+}
+
+// Enhanced form validation and UX
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.querySelector('form');
+  const submitButton = form.querySelector('button[type="submit"]');
+  const registerText = submitButton.querySelector('.register-text');
+  const loadingText = submitButton.querySelector('.loading-text');
+  
+  // Real-time validation feedback
+  const inputs = form.querySelectorAll('input');
+  inputs.forEach(input => {
+    input.addEventListener('input', function() {
+      const successIndicator = this.parentElement.querySelector('.field-success');
+      
+      // Password strength checking
+      if (this.name === 'password1') {
+        const strengthContainer = this.closest('.relative').querySelector('.password-strength');
+        const strengthBar = strengthContainer.querySelector('.strength-bar');
+        const strengthText = strengthContainer.querySelector('.strength-text');
+        const requirements = strengthContainer.querySelectorAll('.strength-requirements svg');
+        
+        if (this.value.length > 0) {
+          strengthContainer.classList.remove('hidden');
+          const { score, requirements: reqs } = checkPasswordStrength(this.value);
+          
+          // Update strength bar
+          const percentage = (score / 3) * 100;
+          strengthBar.style.width = percentage + '%';
+          
+          if (score === 1) {
+            strengthBar.className = 'strength-bar h-2 rounded-full transition-all duration-300 bg-red-500';
+            strengthText.textContent = 'Weak';
+            strengthText.className = 'text-xs font-medium text-red-500';
+          } else if (score === 2) {
+            strengthBar.className = 'strength-bar h-2 rounded-full transition-all duration-300 bg-yellow-500';
+            strengthText.textContent = 'Medium';
+            strengthText.className = 'text-xs font-medium text-yellow-600';
+          } else if (score === 3) {
+            strengthBar.className = 'strength-bar h-2 rounded-full transition-all duration-300 bg-green-500';
+            strengthText.textContent = 'Strong';
+            strengthText.className = 'text-xs font-medium text-green-600';
+          }
+          
+          // Update requirement indicators
+          requirements[0].className = reqs.length ? 'w-3 h-3 text-green-500 req-length' : 'w-3 h-3 text-gray-400 req-length';
+          requirements[1].className = reqs.number ? 'w-3 h-3 text-green-500 req-number' : 'w-3 h-3 text-gray-400 req-number';
+          requirements[2].className = reqs.letter ? 'w-3 h-3 text-green-500 req-letter' : 'w-3 h-3 text-gray-400 req-letter';
+        } else {
+          strengthContainer.classList.add('hidden');
+        }
+      }
+      
+      // General validation feedback
+      if (this.value.length > 0 && this.checkValidity()) {
+        this.classList.remove('border-red-300');
+        this.classList.add('border-green-300');
+        if (successIndicator && !this.name.includes('password')) {
+          successIndicator.classList.remove('hidden');
+        }
+      } else {
+        this.classList.remove('border-green-300');
+        if (successIndicator) {
+          successIndicator.classList.add('hidden');
+        }
+      }
+    });
+    
+    input.addEventListener('blur', function() {
+      if (this.value.length > 0 && !this.checkValidity()) {
+        this.classList.add('border-red-300');
+      }
+    });
+  });
+  
+  // Form submission with loading state
+  form.addEventListener('submit', function(e) {
+    submitButton.disabled = true;
+    registerText.classList.add('hidden');
+    loadingText.classList.remove('hidden');
+    
+    // Re-enable button after 10 seconds as fallback (registration might take longer)
+    setTimeout(() => {
+      submitButton.disabled = false;
+      registerText.classList.remove('hidden');
+      loadingText.classList.add('hidden');
+    }, 10000);
+  });
+});
+</script>
+{% endblock %}

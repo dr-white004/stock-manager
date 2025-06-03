@@ -1,0 +1,178 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if object %}Edit{% else %}Add{% endif %} Return - Clock Inventory{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center space-x-3 mb-4">
+            <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
+                </svg>
+            </div>
+            <h1 class="text-3xl font-bold text-gray-900">
+                {% if object %}Edit Return{% else %}Process Return{% endif %}
+            </h1>
+        </div>
+        <p class="text-gray-600">
+            {% if object %}Update the details for this return{% else %}Record a new clock return to inventory{% endif %}
+        </p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+        <div class="px-6 py-8">
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <!-- Clock Type Field -->
+                <div>
+                    <label for="{{ form.clock_type.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Clock Type <span class="text-red-500">*</span>
+                    </label>
+                    <select name="{{ form.clock_type.name }}" 
+                            id="{{ form.clock_type.id_for_label }}"
+                            class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                            required>
+                        <option value="">Select a clock type</option>
+                        {% for choice in form.clock_type.field.queryset %}
+                            <option value="{{ choice.pk }}" {% if form.clock_type.value == choice.pk|stringformat:"s" %}selected{% endif %}>
+                                {{ choice.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    {% if form.clock_type.errors %}
+                        <div class="mt-2 text-sm text-red-600">
+                            {{ form.clock_type.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Quantity Field -->
+                <div>
+                    <label for="{{ form.quantity.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Return Quantity <span class="text-red-500">*</span>
+                    </label>
+                    <div class="relative">
+                        <input type="number" 
+                               name="{{ form.quantity.name }}" 
+                               id="{{ form.quantity.id_for_label }}"
+                               value="{{ form.quantity.value|default:'' }}"
+                               min="1"
+                               class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
+                               placeholder="Enter quantity to return"
+                               required>
+                        <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    {% if form.quantity.errors %}
+                        <div class="mt-2 text-sm text-red-600">
+                            {{ form.quantity.errors.0 }}
+                        </div>
+                    {% endif %}
+                    <p class="mt-2 text-sm text-gray-500">Number of clocks being returned to inventory</p>
+                </div>
+
+                <!-- Notes Field -->
+                <div>
+                    <label for="{{ form.notes.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-2">
+                        Return Notes
+                    </label>
+                    <textarea name="{{ form.notes.name }}" 
+                              id="{{ form.notes.id_for_label }}"
+                              rows="4"
+                              class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors resize-none"
+                              placeholder="Add any notes about the return (reason, condition, etc.)">{{ form.notes.value|default:'' }}</textarea>
+                    {% if form.notes.errors %}
+                        <div class="mt-2 text-sm text-red-600">
+                            {{ form.notes.errors.0 }}
+                        </div>
+                    {% endif %}
+                    <p class="mt-2 text-sm text-gray-500">Optional notes about the return reason or condition</p>
+                </div>
+
+                <!-- Return Info Box -->
+                <div class="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-orange-400" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-orange-800">Return Processing</h3>
+                            <div class="mt-2 text-sm text-orange-700">
+                                <p>Returns will be removed from your inventory stock. Make sure to verify the condition of returned items before processing.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Errors -->
+                {% if form.non_field_errors %}
+                    <div class="rounded-md bg-red-50 p-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-red-800">Error</h3>
+                                <div class="mt-2 text-sm text-red-700">
+                                    {{ form.non_field_errors.0 }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-200">
+                    <button type="submit" 
+                            class="inline-flex justify-center items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
+                        </svg>
+                        {% if object %}Update Return{% else %}Process Return{% endif %}
+                    </button>
+                    
+                    <a href="{% url 'return_list' %}" 
+                       class="inline-flex justify-center items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-lg shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition-colors">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="mt-8 bg-gray-50 rounded-xl p-6">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <a href="{% url 'return_list' %}" 
+               class="inline-flex items-center px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+                <svg class="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                </svg>
+                View All Returns
+            </a>
+            <a href="{% url 'sale_list' %}" 
+               class="inline-flex items-center px-4 py-3 bg-white border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+                <svg class="w-5 h-5 mr-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                </svg>
+                View Sales
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+env/
+venv/
+ENV/
+virtual/
+*.env
+
+# Django
+staticfiles/
+media/
+db.sqlite3
+
+# VSCode
+.vscode/
+
+# macOS
+.DS_Store
+
+# Pip
+*.log
+
+
+# Media (only for production — local dev will still use this)
+media/
