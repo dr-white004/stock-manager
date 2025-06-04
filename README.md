@@ -31,4 +31,7 @@ A full-featured Django-based product inventory management system that enables us
 
 ---
 
+## 🚀 Live Demo
 
+🔗 [Visit the Live App](https://stock-manager-6gd8.onrender.com/)
+still in development stage, more features are on the way 
